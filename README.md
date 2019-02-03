@@ -1,23 +1,25 @@
 # try-opencv
 sandbox for opencv
 
-# run
+# run in host 
 ```bash
-docker pull spmallick/opencv-docker:opencv-4
-sudo docker run -u root --privileged --device=/dev/video0:/dev/video0 -v ~/github/try-opencv:/home/jovyan/code -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -p 5000:5000 -p 8888:8888 -it spmallick/opencv-docker:opencv-4 /bin/bash
+cd dockerfiles/u1604-nvidia10-opencv4
+docker build -t ct/opencv4 .
+# get coffee
+cd ../development/basic
+docker build -t ct/opencv4-dev
+docker run --device=/dev/video0:/dev/video0 -v ~/github/try-opencv/src:/home/developer/src -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -p 5000:5000 -p 8888:8888 -it ct/opencv4-dev /bin/bash
 ```
 
 # run in guest
 ```bash
-usermod -a -G video jovyan
-su - jovyan
-
-cd code/src
+cd src
 mkdir build
 cd build
 cmake ..
 cmake --build . --config Release
 ./version 
+./video
 ```
 
 

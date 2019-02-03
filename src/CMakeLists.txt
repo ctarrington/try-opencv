@@ -1,12 +1,14 @@
-cmake_minimum_required(VERSION 2.8.12)
-
+cmake_minimum_required(VERSION 3.0)
 PROJECT(FLD)
 
 #############  Common Instructions for all Users  ############
 find_package( OpenCV REQUIRED )
+MESSAGE("OpenCV version : ${OpenCV_VERSION}")
+
+find_package( dlib REQUIRED )
 
 include_directories( ${OpenCV_INCLUDE_DIRS})
-include(../../common/dlib/dlib/cmake)
+link_directories(${OpenCV_LIB_DIR})
 
 MACRO(add_example name)
   ADD_EXECUTABLE(${name} ${name}.cpp)
