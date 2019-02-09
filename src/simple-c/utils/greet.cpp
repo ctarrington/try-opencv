@@ -5,5 +5,5 @@ using namespace std;
 
 
 string formal(string name) {
-    return "Hello there, " + name;
+    return "Hello There, " + name;
 }

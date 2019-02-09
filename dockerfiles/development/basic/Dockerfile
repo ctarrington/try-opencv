@@ -5,24 +5,26 @@ RUN apt-get install -y zsh
 
 RUN cd /tmp && \
     wget https://download.jetbrains.com/cpp/CLion-2018.3.4.tar.gz && \
-    tar xvzf CLion-2018.3.4.tar.gz -C /opt/
+    tar xzf CLion-2018.3.4.tar.gz -C /opt/
 
 # user setup
 RUN useradd -m -d /home/developer \
-    -s /usr/bin/zsh \
+    -s /bin/bash \
     -G sudo,video \
     -u 1000 \
     -p "$(openssl passwd -1 developer)" \
     developer
 
-RUN echo "HISTFILE=~/.histfile" >> /home/developer/.zshrc && \
-    echo "HISTSIZE=1000" >> /home/developer/.zshrc && \
-    echo "SAVEHIST=1000" >> /home/developer/.zshrc && \
-    echo "zstyle :compinstall filename '/home/developer/.zshrc'" >> /home/developer/.zshrc && \
-    echo "autoload -Uz compinit" >> /home/developer/.zshrc && \
-    echo "compinit" >> /home/developer/.zshrc && \
-    echo "export PROMPT='%m %/ >'" >> /home/developer/.zshrc && \
-    chown developer /home/developer/.zshrc
 
 USER developer
 WORKDIR /home/developer
+
+RUN echo "developer" | sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+RUN git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
+
+RUN sed -i 's/plugins=(git)/plugins=(git history-substring-search)/' .zshrc
+RUN sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="kphoen"/' .zshrc
+
+RUN echo "setopt rmstarsilent" >> .zshrc
+RUN echo "export PATH=$PATH:/opt/clion-2018.3.4/bin/gdb/linux/bin" >> .zshrc
+
